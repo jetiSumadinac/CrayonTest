@@ -10,5 +10,6 @@ namespace CrayonTest.Models.OutputModels
         public string Base { get; set; }
         public List<Dictionary<DateTime, List<Dictionary<string, double>>>> Rates { get; set; }
         //public int MyProperty { get; set; }
+
     }
 }

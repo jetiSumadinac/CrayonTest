@@ -7,6 +7,7 @@ using CrayonTest.Models.InputModels;
 using CrayonTest.Models.OutputModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace CrayonTest.Controllers
 {
@@ -28,7 +29,7 @@ namespace CrayonTest.Controllers
         [HttpPost("test-post")]
         public async Task<IActionResult> Test()
         {
-            return Ok("penis");
+            return Ok("Helooo from test!");
         }
 
         [HttpGet("test-http-client")]
@@ -55,6 +56,7 @@ namespace CrayonTest.Controllers
 
             var response = await httpClient.GetAsync(url); //TODO: URL should be localized
             var result = await response.Content.ReadAsAsync<ResponseRatesModel>();
+            //var result2 = JsonConvert.DeserializeObject<ResponseRatesModel>();
 
             return Ok(result);
         }
