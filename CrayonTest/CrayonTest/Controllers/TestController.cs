@@ -43,7 +43,7 @@ namespace CrayonTest.Controllers
         }
 
         [HttpGet("proof-of-concept")]
-        public async Task<IActionResult> ProofOfConcept([FromBody]InputExchangeDataModel data) 
+        public async Task<IActionResult> ProofOfConcept([FromBody]InputExchangeDataModel data)
         {
             HttpClient httpClient = new HttpClient();
 
@@ -53,14 +53,34 @@ namespace CrayonTest.Controllers
             string url = $"https://api.exchangeratesapi.io/history?symbols={data.BaseCurr},{data.TargetCurr}&base={data.BaseCurr}&start_at={firstDate}&end_at={lastDate}";
 
             var response = await httpClient.GetAsync(url); //TODO: URL should be localized
-            var result = await response.Content.ReadAsAsync<ResponseRatesModel>();
+            var responseObject = await response.Content.ReadAsAsync<ResponseRatesModel>();
 
-            foreach (var r in result.Rates)
+            List<double> _rates = new List<double>();
+            double min = Double.MaxValue;
+            double max = 0;
+            DateTime dateOnMax = DateTime.UnixEpoch, dateOnMin = DateTime.UnixEpoch;
+            foreach (var r in responseObject.Rates)
             {
-                var p = r;
-
+                if (r.Value.Values.First() > max)
+                {
+                    max = r.Value.Values.First();
+                    dateOnMax = r.Key;
+                }
+                else if (r.Value.Values.First() < min)
+                {
+                    min = r.Value.Values.First();
+                    dateOnMin = r.Key;
+                }
+                _rates.Add(r.Value.Values.First());
             }
-
+            var result = new ReturnModel //TODO: Constructor
+            {
+                AverageValue = _rates.Average(),
+                MaxExchangeRate = max,
+                MinExchangeRate = min,
+                DateOnMaxRate = dateOnMax,
+                DateOnMinRate = dateOnMin,
+            };
             return Ok(result);
         }
 
