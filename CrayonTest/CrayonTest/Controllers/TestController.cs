@@ -22,11 +22,11 @@ namespace CrayonTest.Controllers
             _ratesService = ratesService;
         }
 
-        [HttpGet("proof-of-concept")]
-        public async Task<IActionResult> ProofOfConcept([FromBody]InputExchangeDataModel data)
+        [HttpGet("get-rates")]
+        public async Task<IActionResult> GetRates([FromBody]InputExchangeDataModel data)
         {
             var result = await _ratesService.GetRates(data);
-            return Ok(result);
+            return Ok(result);//TODO: response handling in BaseController
         }
     }
 }

@@ -41,14 +41,8 @@ namespace CrayonTest.Services.RatesServices
                 }
                 _rates.Add(r.Value.Values.First());
             }
-            var result = new ReturnModel //TODO: Constructor
-            {
-                AverageValue = _rates.Average(),
-                MaxExchangeRate = max,
-                MinExchangeRate = min,
-                DateOnMaxRate = dateOnMax,
-                DateOnMinRate = dateOnMin,
-            };
+            var result = new ReturnModel(_rates.Average(), max, min, dateOnMax, dateOnMin);
+
             return result;
         }
 
