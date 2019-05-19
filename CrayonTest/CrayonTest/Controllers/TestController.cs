@@ -14,7 +14,7 @@ namespace CrayonTest.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TestController : ControllerBase
+    public class TestController : BaseController
     {
         IRatesService _ratesService;
         public TestController(IRatesService ratesService)

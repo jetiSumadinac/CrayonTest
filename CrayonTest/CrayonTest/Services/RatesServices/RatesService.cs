@@ -15,7 +15,7 @@ namespace CrayonTest.Services.RatesServices
         {
             HttpClient httpClient = new HttpClient();
 
-            var sortedDates = SortDatesAscending(data.Dates);
+            var sortedDates = await SortDatesAscending(data.Dates);
             var firstDate = sortedDates.First().ToString("yyyy-MM-dd");
             var lastDate = sortedDates.Last().ToString("yyyy-MM-dd");
             string url = $"https://api.exchangeratesapi.io/history?symbols={data.BaseCurr},{data.TargetCurr}&base={data.BaseCurr}&start_at={firstDate}&end_at={lastDate}";
@@ -23,11 +23,19 @@ namespace CrayonTest.Services.RatesServices
             var response = await httpClient.GetAsync(url); //TODO: URL should be localized
             var responseObject = await response.Content.ReadAsAsync<ResponseRatesModel>();
 
+            var result = await getExtremeValues(responseObject);
+
+            return result;
+        }
+
+        #region private methods
+        private async Task<ReturnModel> getExtremeValues(ResponseRatesModel response)
+        {
             List<double> _rates = new List<double>();
             double min = Double.MaxValue;
             double max = 0;
             DateTime dateOnMax = DateTime.UnixEpoch, dateOnMin = DateTime.UnixEpoch;
-            foreach (var r in responseObject.Rates)
+            foreach (var r in response.Rates)
             {
                 if (r.Value.Values.First() > max)
                 {
@@ -41,13 +49,12 @@ namespace CrayonTest.Services.RatesServices
                 }
                 _rates.Add(r.Value.Values.First());
             }
-            var result = new ReturnModel(_rates.Average(), max, min, dateOnMax, dateOnMin);
+
+            var result = new ReturnModel(_rates.Average(), min, max, dateOnMin, dateOnMax);
 
             return result;
         }
-
-        #region private methods
-        static List<DateTime> SortDatesAscending(List<DateTime> list)
+        private static async Task<List<DateTime>> SortDatesAscending(List<DateTime> list)
         {
             list.Sort((a, b) => a.CompareTo(b));
             return list;
