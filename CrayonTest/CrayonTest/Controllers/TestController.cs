@@ -47,8 +47,6 @@ namespace CrayonTest.Controllers
         {
             HttpClient httpClient = new HttpClient();
 
-            DateTime.Now.ToString("yyyy’-‘MM’-‘dd’T’HH’:’mm’:’ss");
-
             var sortedDates = SortDatesAscending(data.Dates);
             var firstDate = sortedDates.First().ToString("yyyy-MM-dd");
             var lastDate = sortedDates.Last().ToString("yyyy-MM-dd");
@@ -56,7 +54,12 @@ namespace CrayonTest.Controllers
 
             var response = await httpClient.GetAsync(url); //TODO: URL should be localized
             var result = await response.Content.ReadAsAsync<ResponseRatesModel>();
-            //var result2 = JsonConvert.DeserializeObject<ResponseRatesModel>();
+
+            foreach (var r in result.Rates)
+            {
+                var p = r;
+
+            }
 
             return Ok(result);
         }
