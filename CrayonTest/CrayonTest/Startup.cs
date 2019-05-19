@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CrayonTest.Interfaces.RatesServices;
+using CrayonTest.Services.RatesServices;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -17,7 +19,7 @@ namespace CrayonTest
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddCors();
-
+            services.AddSingleton<IRatesService, RatesService>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
